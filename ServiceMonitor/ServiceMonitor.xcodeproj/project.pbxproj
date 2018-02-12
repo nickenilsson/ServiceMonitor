@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		506A0005202DA8730076C517 /* SimpleInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506A0004202DA8730076C517 /* SimpleInputVC.swift */; };
+		506A0005202DA8730076C517 /* ServiceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506A0004202DA8730076C517 /* ServiceVC.swift */; };
 		506A0007202DA8920076C517 /* URLPinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506A0006202DA8920076C517 /* URLPinger.swift */; };
 		506A0009202DA8EA0076C517 /* StorageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506A0008202DA8EA0076C517 /* StorageHelper.swift */; };
 		506A000B202DA9930076C517 /* ServicesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506A000A202DA9930076C517 /* ServicesVC.swift */; };
@@ -29,7 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		506A0004202DA8730076C517 /* SimpleInputVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInputVC.swift; sourceTree = "<group>"; };
+		506A0004202DA8730076C517 /* ServiceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceVC.swift; sourceTree = "<group>"; };
 		506A0006202DA8920076C517 /* URLPinger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPinger.swift; sourceTree = "<group>"; };
 		506A0008202DA8EA0076C517 /* StorageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageHelper.swift; sourceTree = "<group>"; };
 		506A000A202DA9930076C517 /* ServicesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesVC.swift; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		50BE374720307BC600B204E5 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				506A0004202DA8730076C517 /* SimpleInputVC.swift */,
+				506A0004202DA8730076C517 /* ServiceVC.swift */,
 				506A000A202DA9930076C517 /* ServicesVC.swift */,
 			);
 			path = Controllers;
@@ -240,7 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				506A000B202DA9930076C517 /* ServicesVC.swift in Sources */,
-				506A0005202DA8730076C517 /* SimpleInputVC.swift in Sources */,
+				506A0005202DA8730076C517 /* ServiceVC.swift in Sources */,
 				506AFFE3202DA80A0076C517 /* AppDelegate.swift in Sources */,
 				50BE374620307B9E00B204E5 /* ServiceStatus.swift in Sources */,
 				506A0007202DA8920076C517 /* URLPinger.swift in Sources */,

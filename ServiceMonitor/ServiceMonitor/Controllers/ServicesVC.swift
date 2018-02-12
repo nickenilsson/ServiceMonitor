@@ -45,10 +45,11 @@ class SimpleCell: UITableViewCell {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        setupViews()
     }
     
-    private func setupViews(){
+    private func setupViews() {
         
         contentView.addSubview(statusLabel)
         statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
@@ -86,15 +87,8 @@ class ServicesVC: UIViewController {
         return tv
     }()
     
-    private lazy var buttonTableViewEdit: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(buttonEditPressed))
-        return button
-    }()
-    
-    private lazy var buttonTableViewAdd: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .add , target: self, action: #selector(buttonAddPressed))
-        return button
-    }()
+    private lazy var buttonTableViewEdit: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(buttonEditPressed))
+    private lazy var buttonTableViewAdd: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add , target: self, action: #selector(buttonAddPressed))
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -129,7 +123,7 @@ class ServicesVC: UIViewController {
     }
     
     private func setupNavBar(){
-        navigationItem.title = "URLChecker"
+        navigationItem.title = "Services"
         navigationItem.leftBarButtonItem = self.buttonTableViewEdit
         navigationItem.rightBarButtonItem = self.buttonTableViewAdd
     }
@@ -144,15 +138,15 @@ class ServicesVC: UIViewController {
     }
     
     @objc private func buttonAddPressed() {
-        let simpleInputVC = SimpleInputVC()
+        let simpleInputVC = ServiceVC()
         simpleInputVC.delegate = self
         let navVC = UINavigationController(rootViewController: simpleInputVC)
         navigationController?.present(navVC, animated: true, completion: nil)
     }
     
-    private func addUrls(urls: [URL]) {
+    private func addServices(services: [ServiceStatus]) {
         tableView.beginUpdates()
-        sites = sites + urls.map { ServiceStatus(statusCode: nil, url: $0, lastChecked: nil) }
+        sites = sites + services
         tableView.insertRows(at: [IndexPath(item: sites.count - 1, section: 0)], with: .none)
         tableView.endUpdates()
         StorageHelper.store(object: sites, directory: .documents, fileName: ServiceStatus.archivePath)
@@ -224,11 +218,10 @@ extension ServicesVC: UITableViewDataSource {
     }
 }
 
-extension ServicesVC: SimpleInputDelegate {
-    func inputSaved(text: String) {
-        guard let url = URL(string: text) else { return }
-        addUrls(urls: [url])
-        checkUrl(url: url)
+extension ServicesVC: ServiceVCDelegate {
+    func serviceStatusSaved(serviceStatus: ServiceStatus){
+        addServices(services: [serviceStatus])
+        checkUrl(url: serviceStatus.url)
     }
 }
 
