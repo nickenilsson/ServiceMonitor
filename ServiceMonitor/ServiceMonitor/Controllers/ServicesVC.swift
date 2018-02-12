@@ -13,23 +13,25 @@ import UIKit
 class ServicesVC: UIViewController {
     
     var serviceStatuses: [ServiceStatus]!
+    private let urlPinger: URLPinger! = URLPinger.shared
     
+    private let servicePingInterval: Double = 5
     private let cellIdentifier = "cellIdentifier"
     private var timer: Timer!
+    
     private lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.register(ServiceStatusCell.self, forCellReuseIdentifier: cellIdentifier)
         tv.dataSource = self
-        tv.rowHeight = UITableViewAutomaticDimension
+        tv.rowHeight = 100
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.allowsSelection = false
-        
         return tv
     }()
     
     private lazy var buttonTableViewEdit: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(buttonEditPressed))
     private lazy var buttonTableViewAdd: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add , target: self, action: #selector(buttonAddPressed))
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -54,7 +56,7 @@ class ServicesVC: UIViewController {
     
     private func setupView() {
         setupNavBar()
-        
+    
         view.addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -69,7 +71,7 @@ class ServicesVC: UIViewController {
     }
     
     private func createUrlCheckerTimer() -> Timer {
-        return Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(checkServiceStatuses), userInfo: nil, repeats: true)
+        return Timer.scheduledTimer(timeInterval: servicePingInterval, target: self, selector: #selector(checkServiceStatuses), userInfo: nil, repeats: true)
     }
     
     @objc private func buttonEditPressed() {
@@ -78,7 +80,7 @@ class ServicesVC: UIViewController {
     }
     
     @objc private func buttonAddPressed() {
-        let simpleInputVC = ServiceVC()
+        let simpleInputVC = AddServiceVC()
         simpleInputVC.delegate = self
         let navVC = UINavigationController(rootViewController: simpleInputVC)
         navigationController?.present(navVC, animated: true, completion: nil)
@@ -89,7 +91,6 @@ class ServicesVC: UIViewController {
         serviceStatuses = serviceStatuses + services
         let currentLastIndex = serviceStatuses.count - 1
         let insertRows = (currentLastIndex ..< currentLastIndex + services.count)
-        
         let insertRowIndices = insertRows.map { IndexPath(item: $0, section: 0) }
         tableView.insertRows(at: insertRowIndices, with: .none)
         tableView.endUpdates()
@@ -102,14 +103,14 @@ class ServicesVC: UIViewController {
     }
     
     private func checkUrl(url: URL) {
-        URLPinger.shared.checkUrl(url: url, completion: { [weak self] statusCode in
+        urlPinger.checkUrl(url: url, completion: { [weak self] statusCode in
             DispatchQueue.main.async {
-                self?.updateRows(withUrl: url, statusCode: statusCode)
+                self?.gotStatus(withUrl: url, statusCode: statusCode)
             }
         })
     }
     
-    private func updateRows(withUrl url: URL, statusCode: Int?) {
+    private func gotStatus(withUrl url: URL, statusCode: Int?) {
         let matchingIndices = self.serviceStatuses.enumerated().filter { $0.element.url == url }.map { $0.offset }
         matchingIndices.forEach {
             self.serviceStatuses[$0].lastChecked = Date()
@@ -121,7 +122,6 @@ class ServicesVC: UIViewController {
     }
     
     private func updateCell(cell: ServiceStatusCell, withSiteData site: ServiceStatus) {
-        
         cell.titleLabel.text = site.name
         cell.subtitleLabel.text = site.url.absoluteString
         if let statusDescription = site.statusDescription {

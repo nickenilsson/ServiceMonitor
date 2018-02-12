@@ -15,7 +15,6 @@ class ServiceStatusCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .equalSpacing
         stackView.axis = .vertical
-        stackView.alignment = .fill
         stackView.spacing = 8
         return stackView
     }()
@@ -38,7 +37,7 @@ class ServiceStatusCell: UITableViewCell {
     let subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
     }()
     
@@ -69,17 +68,10 @@ class ServiceStatusCell: UITableViewCell {
         stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
         stackView.trailingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -8).isActive = true
         stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12).isActive = true
         
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(dateLabel)
         
-    }
-    
-    override func prepareForReuse() {
-        titleLabel.text = nil
-        subtitleLabel.text = nil
-        statusLabel.text = nil
     }
 }

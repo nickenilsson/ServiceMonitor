@@ -10,12 +10,11 @@ import Foundation
 
 struct ServiceStatus: Codable {
     
+    static let archivePath = "sites"
     let name: String
     let url: URL
     var statusCode: Int?
-    
     var lastChecked: Date? = nil
-    static let archivePath = "sites"
     var statusDescription: String? {
         if let statusCode = statusCode {
             return (200...299).contains(statusCode) ? "UP" : "FAIL"

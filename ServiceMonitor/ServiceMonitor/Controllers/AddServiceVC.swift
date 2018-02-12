@@ -13,7 +13,7 @@ protocol ServiceVCDelegate: class {
     func serviceStatusSaved(serviceStatus: ServiceStatus)
 }
 
-class ServiceVC: UIViewController {
+class AddServiceVC: UIViewController {
     weak var delegate: ServiceVCDelegate?
     
     private let stackView: UIStackView = {
@@ -42,19 +42,21 @@ class ServiceVC: UIViewController {
         return inputField
     }()
     
-    private let buttonSave: UIButton = {
+    private lazy var buttonSave: UIButton = {
         let button = UIButton(type: UIButtonType.system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Add service", for: .normal)
         button.isEnabled = false
+        button.addTarget(self, action: #selector(buttonSavePressed), for: .touchUpInside)
         return button
     }()
     
     override func viewDidLoad() {
-        buttonSave.addTarget(self, action: #selector(buttonSavePressed), for: .touchUpInside)
+        
         inputFieldName.addTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
         inputFieldUrl.addTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
         setupView()
+        setupNavBar()
     }
     
     private func setupView(){
@@ -68,7 +70,10 @@ class ServiceVC: UIViewController {
         stackView.addArrangedSubview(inputFieldName)
         stackView.addArrangedSubview(inputFieldUrl)
         stackView.addArrangedSubview(buttonSave)
-        
+    
+    }
+    
+    private func setupNavBar() {
         navigationItem.title = "Add new services"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(barButtonDonePressed))
     }
@@ -91,6 +96,7 @@ class ServiceVC: UIViewController {
         self.delegate?.serviceStatusSaved(serviceStatus: service)
         inputFieldName.text = nil
         inputFieldUrl.text = nil
+        buttonSave.isEnabled = false
         
     }
     
