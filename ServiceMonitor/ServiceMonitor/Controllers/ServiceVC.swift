@@ -13,7 +13,7 @@ protocol ServiceVCDelegate: class {
     func serviceStatusSaved(serviceStatus: ServiceStatus)
 }
 
-class ServiceVC: UIViewController, UITextFieldDelegate {
+class ServiceVC: UIViewController {
     weak var delegate: ServiceVCDelegate?
     
     private let stackView: UIStackView = {
@@ -85,17 +85,14 @@ class ServiceVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc func buttonSavePressed(_ sender: Any) {
-        guard let urlString = inputFieldUrl.text, let url = URL(string: urlString), let name = inputFieldName.text else { return }
+        guard let urlString = inputFieldUrl.text, let name = inputFieldName.text, let url = URL(string: urlString) else { return }
+        
         let service = ServiceStatus(name: name, url: url)
         self.delegate?.serviceStatusSaved(serviceStatus: service)
         inputFieldName.text = nil
         inputFieldUrl.text = nil
         
     }
-    
-
-    
-    
     
 }
 

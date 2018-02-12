@@ -16,6 +16,7 @@
 		506AFFED202DA80A0076C517 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 506AFFEB202DA80A0076C517 /* LaunchScreen.storyboard */; };
 		506AFFF8202DA80A0076C517 /* ServiceMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506AFFF7202DA80A0076C517 /* ServiceMonitorTests.swift */; };
 		50BE374620307B9E00B204E5 /* ServiceStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BE374520307B9E00B204E5 /* ServiceStatus.swift */; };
+		50D07E2C2031DACE00928062 /* ServiceStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D07E2B2031DACE00928062 /* ServiceStatusCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		506AFFF7202DA80A0076C517 /* ServiceMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceMonitorTests.swift; sourceTree = "<group>"; };
 		506AFFF9202DA80A0076C517 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50BE374520307B9E00B204E5 /* ServiceStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceStatus.swift; sourceTree = "<group>"; };
+		50D07E2B2031DACE00928062 /* ServiceStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceStatusCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 		506AFFE1202DA80A0076C517 /* ServiceMonitor */ = {
 			isa = PBXGroup;
 			children = (
+				50D07E2A2031DABB00928062 /* Views */,
 				50BE374920307C0700B204E5 /* Network */,
 				50BE374820307BF700B204E5 /* Util */,
 				50BE374720307BC600B204E5 /* Controllers */,
@@ -135,6 +138,14 @@
 				506A0006202DA8920076C517 /* URLPinger.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		50D07E2A2031DABB00928062 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				50D07E2B2031DACE00928062 /* ServiceStatusCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +255,7 @@
 				506AFFE3202DA80A0076C517 /* AppDelegate.swift in Sources */,
 				50BE374620307B9E00B204E5 /* ServiceStatus.swift in Sources */,
 				506A0007202DA8920076C517 /* URLPinger.swift in Sources */,
+				50D07E2C2031DACE00928062 /* ServiceStatusCell.swift in Sources */,
 				506A0009202DA8EA0076C517 /* StorageHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

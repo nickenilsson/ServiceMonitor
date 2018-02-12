@@ -9,81 +9,21 @@
 
 import UIKit
 
-class SimpleCell: UITableViewCell {
-    
-    let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .fill
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        return stackView
-    }()
-    
-    let statusLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        return label
-    }()
-    
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let dateLabel: UILabel = {
-        let label = UILabel ()
-        label.font = UIFont.systemFont(ofSize: 10)
-        return label
-    }()
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupViews()
-    }
-    
-    private func setupViews() {
-        
-        contentView.addSubview(statusLabel)
-        statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
-        statusLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-        statusLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        contentView.addSubview(stackView)
-        stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-        
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(dateLabel)
-        
-    }
-    
-    override func prepareForReuse() {
-        titleLabel.text = nil
-        statusLabel.text = nil
-    }
-    
-}
 
 class ServicesVC: UIViewController {
     
-    var sites: [ServiceStatus]!
+    var serviceStatuses: [ServiceStatus]!
     
     private let cellIdentifier = "cellIdentifier"
     private var timer: Timer!
     private lazy var tableView: UITableView = {
         let tv = UITableView()
-        tv.register(SimpleCell.self, forCellReuseIdentifier: cellIdentifier)
+        tv.register(ServiceStatusCell.self, forCellReuseIdentifier: cellIdentifier)
         tv.dataSource = self
-        tv.rowHeight = 70.0
+        tv.rowHeight = UITableViewAutomaticDimension
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.allowsSelection = false
+        
         return tv
     }()
     
@@ -146,14 +86,18 @@ class ServicesVC: UIViewController {
     
     private func addServices(services: [ServiceStatus]) {
         tableView.beginUpdates()
-        sites = sites + services
-        tableView.insertRows(at: [IndexPath(item: sites.count - 1, section: 0)], with: .none)
+        serviceStatuses = serviceStatuses + services
+        let currentLastIndex = serviceStatuses.count - 1
+        let insertRows = (currentLastIndex ..< currentLastIndex + services.count)
+        
+        let insertRowIndices = insertRows.map { IndexPath(item: $0, section: 0) }
+        tableView.insertRows(at: insertRowIndices, with: .none)
         tableView.endUpdates()
-        StorageHelper.store(object: sites, directory: .documents, fileName: ServiceStatus.archivePath)
+        StorageHelper.store(object: serviceStatuses, directory: .documents, fileName: ServiceStatus.archivePath)
     }
     
     @objc private func checkServiceStatuses() {
-        let uniqueURLs = Set( sites.map { $0.url } )
+        let uniqueURLs = Set( serviceStatuses.map { $0.url } )
         uniqueURLs.forEach { checkUrl(url: $0) }
     }
     
@@ -166,19 +110,20 @@ class ServicesVC: UIViewController {
     }
     
     private func updateRows(withUrl url: URL, statusCode: Int?) {
-        let matchingIndices = self.sites.enumerated().filter { $0.element.url == url }.map { $0.offset }
+        let matchingIndices = self.serviceStatuses.enumerated().filter { $0.element.url == url }.map { $0.offset }
         matchingIndices.forEach {
-            self.sites[$0].lastChecked = Date()
-            self.sites[$0].statusCode = statusCode
-            if let cell = tableView.cellForRow(at: IndexPath(item: $0, section: 0)) as? SimpleCell {
-                self.updateCell(cell: cell, withSiteData: self.sites[$0])
+            self.serviceStatuses[$0].lastChecked = Date()
+            self.serviceStatuses[$0].statusCode = statusCode
+            if let cell = tableView.cellForRow(at: IndexPath(item: $0, section: 0)) as? ServiceStatusCell {
+                self.updateCell(cell: cell, withSiteData: self.serviceStatuses[$0])
             }
         }
     }
     
-    private func updateCell(cell: SimpleCell, withSiteData site: ServiceStatus) {
+    private func updateCell(cell: ServiceStatusCell, withSiteData site: ServiceStatus) {
         
-        cell.titleLabel.text = site.url.absoluteString
+        cell.titleLabel.text = site.name
+        cell.subtitleLabel.text = site.url.absoluteString
         if let statusDescription = site.statusDescription {
             cell.statusLabel.text = statusDescription
         }
@@ -193,17 +138,17 @@ extension ServicesVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            self.sites.remove(at: indexPath.item)
+            self.serviceStatuses.remove(at: indexPath.item)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            StorageHelper.store(object: self.sites, directory: .documents, fileName: ServiceStatus.archivePath)
+            StorageHelper.store(object: self.serviceStatuses, directory: .documents, fileName: ServiceStatus.archivePath)
         default:
             break
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! SimpleCell
-        let site = sites[indexPath.item]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ServiceStatusCell
+        let site = serviceStatuses[indexPath.item]
         updateCell(cell: cell, withSiteData: site)
         
         return cell
@@ -214,7 +159,7 @@ extension ServicesVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sites.count
+        return serviceStatuses.count
     }
 }
 
