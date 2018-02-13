@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let sites: [ServiceStatus] = StorageHelper.get(directory: .documents, fileName: ServiceStatus.archivePath) ?? []
         let vc = ServicesVC()
+        vc.urlPinger = URLPinger.shared
         vc.serviceStatuses = sites
         let navigationVC = UINavigationController(rootViewController: vc)
         window = UIWindow(frame: UIScreen.main.bounds)

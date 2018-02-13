@@ -13,7 +13,7 @@ import UIKit
 class ServicesVC: UIViewController {
     
     var serviceStatuses: [ServiceStatus]!
-    private let urlPinger: URLPinger! = URLPinger.shared
+    var urlPinger: URLPinger = URLPinger.shared
     
     private let servicePingInterval: Double = 5
     private let cellIdentifier = "cellIdentifier"
