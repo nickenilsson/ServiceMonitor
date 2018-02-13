@@ -23,7 +23,7 @@ class ServicesVC: UIViewController {
         let tv = UITableView()
         tv.register(ServiceStatusCell.self, forCellReuseIdentifier: cellIdentifier)
         tv.dataSource = self
-        tv.rowHeight = 100
+        tv.rowHeight = 105
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.allowsSelection = false
         return tv
@@ -90,9 +90,9 @@ class ServicesVC: UIViewController {
         tableView.beginUpdates()
         serviceStatuses = serviceStatuses + services
         let currentLastIndex = serviceStatuses.count - 1
-        let insertRows = (currentLastIndex ..< currentLastIndex + services.count)
-        let insertRowIndices = insertRows.map { IndexPath(item: $0, section: 0) }
-        tableView.insertRows(at: insertRowIndices, with: .none)
+        let rowsToInsert = (currentLastIndex ..< currentLastIndex + services.count)
+        let rowsToInsertIndexPaths = rowsToInsert.map { IndexPath(item: $0, section: 0) }
+        tableView.insertRows(at: rowsToInsertIndexPaths, with: .none)
         tableView.endUpdates()
         StorageHelper.store(object: serviceStatuses, directory: .documents, fileName: ServiceStatus.archivePath)
     }
