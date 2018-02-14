@@ -138,8 +138,10 @@ extension ServicesVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
+            tableView.beginUpdates()
             self.serviceStatuses.remove(at: indexPath.item)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
             StorageHelper.store(object: self.serviceStatuses, directory: .documents, fileName: ServiceStatus.archivePath)
         default:
             break
